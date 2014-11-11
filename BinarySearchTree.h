@@ -61,7 +61,7 @@ template < class T >
 void BinarySearchTree<T>::remove(String* sk)
 {
    //DO THIS
-
+   root = removeItem(root, sk);
 
 
 }
@@ -70,11 +70,41 @@ template < class T >
 TreeNode<T>* BinarySearchTree<T>::removeItem(TreeNode<T>* tNode, String* sk)
 {
    //DO THIS
-
-
-
+	if (tNode == NULL)
+	{
+		return tNode;
+	}	
+	
+	T* node_item = tNode->getItem();
+	int comp = (*comp_keys) (sk, node_item);
+	
+	if (comp == 0)
+	{
+		sze--;
+		return removeNode(tNode);
+	}
+	
+	else if (comp < 0)
+	{
+		TreeNode<T>* subtree = removeItem(tNode->getLeft(), sk);
+		tNode->setLeft(subtree);
+		return tNode;
+	}
+	
+	else
+	{
+		TreeNode<T>* subtree = removeItem(tNode->getRight(), sk);
+		tNode->setLeft(subtree);
+		return tNode;
+	}
+	
 }
-
+/*
+1. find the item to be removed
+2. determine the easy or hard case
+3. hard case: get data from Inorder Successor, overwrite data to be removed, remove the node with Inorder Successor
+3. easy case:
+*/
 template < class T >
 TreeNode<T>* BinarySearchTree<T>::removeNode(TreeNode<T>* tNode)
 {
@@ -98,11 +128,11 @@ TreeNode<T>* BinarySearchTree<T>::removeNode(TreeNode<T>* tNode)
    else 
    {
       //DO THIS
-
-
-
-
-
+	  TreeNode<T>* data = findLeftMost(tNode->getRight());
+	  tNode->setItem(data);
+	  TreeNode<T>* subtree = removeLeftMost(right);
+	  tNode->setRight(subtree);
+	  return tNode;
    }
 }
 
@@ -110,22 +140,29 @@ template < class T >
 T* BinarySearchTree<T>::findLeftMost(TreeNode<T>* tNode)
 {
    //DO THIS (use a while loop)
-
-
-
-
-
+   while(tNode->getLeft() != NULL)
+   {
+	tNode = tNode->getLeft();
+   }
+	T* tosender = tNode->getItem();
+	return tosender;
 }
 
 template < class T >
 TreeNode<T>* BinarySearchTree<T>::removeLeftMost(TreeNode<T>* tNode)
 {
    //DO THIS (recursion)
-
-
-
-
-
+	if(tNode->getLeft() == NULL)
+	{
+	return tNode->getRight();
+	}
+	
+	else
+	{
+	TreeNode<T>* subtree = removeLeftMost(tNode->getLeft());
+	tNode->setLeft(subtree);
+	return tNode;
+	}
 }
 
 template < class T >
@@ -141,8 +178,10 @@ template < class T >
 T** BinarySearchTree<T>::treeSort(T** items, int num_itemss, int (*comp_items) (T* item_1, T* item_2), int (*comp_keys) (String* key, T* item))
 {
    //DO THIS
-
-
+   /*
+   create BST, put all items into BST, 2. inorder traversal, put items back on array.
+   */
+   BinarySearchTree<T>* BST = new BinarySearchTree<T>(items, num_itemss, (*comp_items), (*comp_keys));
 
 }
 
